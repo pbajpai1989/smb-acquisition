@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>New Onboarding Email Journey — TPV Impact Analysis</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; color: #1a1a1a; background: #f9f9f8; padding: 32px 24px; }
@@ -13,13 +12,14 @@
     .subtitle { font-size: 13px; color: #888; margin-bottom: 20px; }
     .caveat { background: #faeeda; border-radius: 8px; padding: 10px 14px; margin-bottom: 24px; font-size: 13px; color: #633806; display: flex; align-items: flex-start; gap: 8px; line-height: 1.6; }
     .caveat-icon { flex-shrink: 0; margin-top: 1px; }
-    .sec-label { font-size: 11px; font-weight: 600; letter-spacing: 0.07em; color: #999; text-transform: uppercase; margin-bottom: 10px; }
+    .sec-label { font-size: 18px; font-weight: 700; letter-spacing: 0; color: #111; text-transform: none; margin-bottom: 10px; }
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
     .card { border: 1px solid #e5e5e3; border-radius: 10px; padding: 14px 16px; background: #fff; }
     .card.highlight { border-color: #5DCAA5; }
     .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 6px; margin-bottom: 8px; font-weight: 500; }
     .badge-km { background: #e1f5ee; color: #085041; }
     .badge-all { background: #e6f1fb; color: #0c447c; }
+    .card-header { min-height: 68px; }
     .col-head { font-size: 14px; font-weight: 600; color: #111; margin-bottom: 3px; }
     .col-sub { font-size: 12px; color: #888; margin-bottom: 12px; line-height: 1.5; }
     .row-lbl { font-size: 11px; font-weight: 600; color: #999; margin: 8px 0 5px; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -60,12 +60,14 @@
     <span><strong>Early signal only</strong> — the new onboarding email journey has been live ~1 month. Results are directionally promising but need another month of data before drawing firm conclusions.</span>
   </div>
 
-  <p class="sec-label">Comparison 1 — New Journey vs Old Journey</p>
+  <p class="sec-label">New Journey vs Old Journey ($ TPV Lift)</p>
   <div class="two-col">
     <div class="card highlight">
       <span class="badge badge-km">Key Markets</span>
-      <p class="col-head">Strong avg, gains concentrated at top</p>
-      <p class="col-sub">High avg ($7.9) with $0 median — top-tier creators driving the lift so far</p>
+      <div class="card-header">
+        <p class="col-head">Strong avg, gains concentrated at top</p>
+        <p class="col-sub">High avg ($7.9) with $0 median — top-tier creators driving the lift so far</p>
+      </div>
       <p class="row-lbl">F30D TPV / Creator</p>
       <div class="mg">
         <div class="mc"><p class="mc-l">Avg</p><p class="mc-v pos">$7.9</p></div>
@@ -84,8 +86,10 @@
     </div>
     <div class="card highlight">
       <span class="badge badge-all">Overall</span>
-      <p class="col-head">New journey broadly outperforms old</p>
-      <p class="col-sub">Positive median ($0.8) across all markets — consistent improvement over the old journey</p>
+      <div class="card-header">
+        <p class="col-head">New journey broadly outperforms old</p>
+        <p class="col-sub">Positive median ($0.8) across all markets — consistent improvement over the old journey</p>
+      </div>
       <p class="row-lbl">F30D TPV / Creator</p>
       <div class="mg">
         <div class="mc"><p class="mc-l">Avg</p><p class="mc-v pos">$6.9</p></div>
@@ -104,12 +108,14 @@
     </div>
   </div>
 
-  <p class="sec-label">Comparison 2 — New Journey vs Holdout</p>
+  <p class="sec-label">New Journey vs Holdout ($ TPV Lift)</p>
   <div class="two-col">
     <div class="card">
       <span class="badge badge-km">Key Markets</span>
-      <p class="col-head">Healthiest result — median exceeds avg</p>
-      <p class="col-sub">Median ($4.4) > avg ($2.2) means lift is broadly distributed, not outlier-driven</p>
+      <div class="card-header">
+        <p class="col-head">Healthiest result — median exceeds avg</p>
+        <p class="col-sub">Median ($4.4) > avg ($2.2) means lift is broadly distributed, not outlier-driven</p>
+      </div>
       <p class="row-lbl">F30D TPV / Creator</p>
       <div class="mg">
         <div class="mc"><p class="mc-l">Avg</p><p class="mc-v pos">$2.2</p></div>
@@ -128,8 +134,10 @@
     </div>
     <div class="card">
       <span class="badge badge-all">Overall</span>
-      <p class="col-head">Mixed — avg positive, median slightly negative</p>
-      <p class="col-sub">Avg lift ($1.4) driven by top creators; typical creator outside KM not yet moving</p>
+      <div class="card-header">
+        <p class="col-head">Mixed — avg positive, median slightly negative</p>
+        <p class="col-sub">Avg lift ($1.4) driven by top creators; typical creator outside KM not yet moving</p>
+      </div>
       <p class="row-lbl">F30D TPV / Creator</p>
       <div class="mg">
         <div class="mc"><p class="mc-l">Avg</p><p class="mc-v pos">$1.4</p></div>
@@ -148,88 +156,9 @@
     </div>
   </div>
 
-  <div class="chart-section">
-    <p class="chart-title">Avg vs median F30D TPV / creator — all segments</p>
-    <p class="chart-sub">Green = Key Markets · Blue = Overall · Light fill = median</p>
-    <div style="position:relative; width:100%; height:260px;">
-      <canvas id="tpvChart" role="img" aria-label="Grouped bar chart comparing avg and median F30D TPV per creator across four segments">KM vs Old Journey avg $7.9 median $0.0; Overall vs Old Journey avg $6.9 median $0.8; KM vs Holdout avg $2.2 median $4.4; Overall vs Holdout avg $1.4 median -$0.2.</canvas>
-    </div>
-    <div class="legend">
-      <span><span class="legend-dot" style="background:#1D9E75;"></span>Avg — Key Markets</span>
-      <span><span class="legend-dot" style="background:#9FE1CB; border:1px dashed #1D9E75;"></span>Median — Key Markets</span>
-      <span><span class="legend-dot" style="background:#378ADD;"></span>Avg — Overall</span>
-      <span><span class="legend-dot" style="background:#B5D4F4; border:1px dashed #378ADD;"></span>Median — Overall</span>
-    </div>
-  </div>
-
-  <p class="sec-label">What to watch at month 2</p>
-  <div class="insight-grid">
-    <div class="ic good">
-      <p class="ic-title">New beats old journey across both segments</p>
-      Positive avg and a positive overall median vs old journey is the clearest win so far. The new journey is already doing better than what it replaced.
-    </div>
-    <div class="ic good">
-      <p class="ic-title">KM vs holdout shows real broad lift</p>
-      In Key Markets, the new journey beats no-journey with a median > avg — the strongest quality signal in the data. Most creators there are genuinely benefiting.
-    </div>
-    <div class="ic watch">
-      <p class="ic-title">KM vs old journey: will the median move?</p>
-      $0.0 median with $7.9 avg means a small cohort is driving KM gains over the old journey. Watch whether this broadens to the typical creator by month 2.
-    </div>
-    <div class="ic watch">
-      <p class="ic-title">Overall vs holdout: too early to call</p>
-      Slightly negative median (-$0.2) outside KM is a flag but not a verdict at one month. Could be cohort timing or noise. Needs another data pull to assess.
-    </div>
-  </div>
-
   <p class="footer">New Onboarding Email Journey · TPV Impact Analysis · June 2026</p>
 </div>
 
-<script>
-new Chart(document.getElementById('tpvChart'), {
-  type: 'bar',
-  data: {
-    labels: ['KM vs old journey', 'Overall vs old journey', 'KM vs holdout', 'Overall vs holdout'],
-    datasets: [
-      {
-        label: 'Avg TPV/creator ($)',
-        data: [7.9, 6.9, 2.2, 1.4],
-        backgroundColor: ['#1D9E75','#378ADD','#1D9E75','#378ADD'],
-        borderWidth: 0,
-        borderRadius: 4
-      },
-      {
-        label: 'Median TPV/creator ($)',
-        data: [0.0, 0.8, 4.4, -0.2],
-        backgroundColor: ['#9FE1CB','#B5D4F4','#9FE1CB','#B5D4F4'],
-        borderWidth: 1,
-        borderColor: ['#1D9E75','#378ADD','#1D9E75','#378ADD'],
-        borderRadius: 4
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        callbacks: {
-          label: (ctx) => {
-            const v = ctx.parsed.y;
-            return ctx.dataset.label + ': ' + (v < 0 ? '-$' + Math.abs(v).toFixed(1) : '$' + v.toFixed(1));
-          }
-        }
-      }
-    },
-    scales: {
-      y: {
-        ticks: { callback: (v) => v < 0 ? '-$' + Math.abs(v) : '$' + v }
-      },
-      x: { ticks: { font: { size: 11 }, maxRotation: 0 } }
-    }
-  }
-});
-</script>
+
 </body>
 </html>
