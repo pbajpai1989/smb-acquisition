@@ -7,22 +7,23 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; color: #1a1a1a; background: #f9f9f8; padding: 32px 24px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; color: #1a1a1a; background: #f9f9f8; padding: 28px 24px; }
     .container { max-width: 860px; margin: 0 auto; }
     h1 { font-size: 22px; font-weight: 600; margin-bottom: 6px; color: #111; }
-    .subtitle { font-size: 13px; color: #888; margin-bottom: 24px; }
-    .sec-label { font-size: 18px; font-weight: 700; color: #111; margin: 32px 0 12px; }
-    .legend { display: flex; gap: 20px; margin-bottom: 14px; font-size: 13px; color: #555; }
+    .subtitle { font-size: 13px; color: #888; margin-bottom: 20px; }
+    .legend { display: flex; gap: 20px; margin-bottom: 16px; font-size: 13px; color: #555; }
     .legend span { display: flex; align-items: center; gap: 6px; }
     .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
-    .chart-wrap { background: #fff; border: 1px solid #e5e5e3; border-radius: 10px; padding: 20px; margin-bottom: 12px; }
-    .chart-inner { position: relative; width: 100%; height: 240px; }
-    .delta-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
-    .delta-card { background: #f5f5f3; border-radius: 8px; padding: 10px 12px; text-align: center; }
-    .delta-label { font-size: 11px; color: #aaa; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
-    .delta-val { font-size: 15px; font-weight: 600; color: #0F6E56; }
-    .delta-val.neg { color: #A32D2D; }
-    .footer { font-size: 11px; color: #bbb; text-align: center; margin-top: 32px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .panel { background: #fff; border: 1px solid #e5e5e3; border-radius: 10px; padding: 16px; }
+    .panel-title { font-size: 15px; font-weight: 600; color: #111; margin-bottom: 12px; }
+    .chart-inner { position: relative; width: 100%; height: 200px; margin-bottom: 12px; }
+    .delta-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .dc { background: #f5f5f3; border-radius: 6px; padding: 7px 10px; text-align: center; }
+    .dc-label { font-size: 10px; color: #aaa; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
+    .dc-val { font-size: 14px; font-weight: 600; color: #0F6E56; }
+    .dc-val.neg { color: #A32D2D; }
+    .footer { font-size: 11px; color: #bbb; text-align: center; margin-top: 24px; }
   </style>
 </head>
 <body>
@@ -36,27 +37,29 @@
     <span><span class="legend-dot" style="background:#B5D4F4; border: 1px solid #378ADD;"></span>Old journey</span>
   </div>
 
-  <p class="sec-label">Open rate</p>
-  <div class="chart-wrap">
-    <div class="chart-inner">
-      <canvas id="openChart" role="img" aria-label="Grouped bar chart of open rates. New journey: Email 1 38.39%, Email 2 31.92%, Email 3 27.64%. Old journey: Email 1 33.37%, Email 2 28.66%, Email 3 28.94%.">New journey open rates: Email 1 38.39%, Email 2 31.92%, Email 3 27.64%. Old journey: Email 1 33.37%, Email 2 28.66%, Email 3 28.94%.</canvas>
+  <div class="two-col">
+    <div class="panel">
+      <p class="panel-title">Open Rate</p>
+      <div class="chart-inner">
+        <canvas id="openChart"></canvas>
+      </div>
+      <div class="delta-row">
+        <div class="dc"><p class="dc-label">Email 1</p><p class="dc-val">+5.0pp</p></div>
+        <div class="dc"><p class="dc-label">Email 2</p><p class="dc-val">+3.3pp</p></div>
+        <div class="dc"><p class="dc-label">Email 3</p><p class="dc-val neg">-1.3pp</p></div>
+      </div>
     </div>
-    <div class="delta-row">
-      <div class="delta-card"><p class="delta-label">Email 1 lift</p><p class="delta-val">+5.0pp</p></div>
-      <div class="delta-card"><p class="delta-label">Email 2 lift</p><p class="delta-val">+3.3pp</p></div>
-      <div class="delta-card"><p class="delta-label">Email 3 lift</p><p class="delta-val neg">-1.3pp</p></div>
-    </div>
-  </div>
 
-  <p class="sec-label">Click-through rate (CTR)</p>
-  <div class="chart-wrap">
-    <div class="chart-inner">
-      <canvas id="ctrChart" role="img" aria-label="Grouped bar chart of CTR. New journey: Email 1 2.91%, Email 2 1.33%, Email 3 0.93%. Old journey: Email 1 1.10%, Email 2 0.98%, Email 3 0.43%.">New journey CTR: Email 1 2.91%, Email 2 1.33%, Email 3 0.93%. Old journey: Email 1 1.10%, Email 2 0.98%, Email 3 0.43%.</canvas>
-    </div>
-    <div class="delta-row">
-      <div class="delta-card"><p class="delta-label">Email 1 lift</p><p class="delta-val">+1.8pp</p></div>
-      <div class="delta-card"><p class="delta-label">Email 2 lift</p><p class="delta-val">+0.4pp</p></div>
-      <div class="delta-card"><p class="delta-label">Email 3 lift</p><p class="delta-val">+0.5pp</p></div>
+    <div class="panel">
+      <p class="panel-title">Click-Through Rate (CTR)</p>
+      <div class="chart-inner">
+        <canvas id="ctrChart"></canvas>
+      </div>
+      <div class="delta-row">
+        <div class="dc"><p class="dc-label">Email 1</p><p class="dc-val">+1.8pp</p></div>
+        <div class="dc"><p class="dc-label">Email 2</p><p class="dc-val">+0.4pp</p></div>
+        <div class="dc"><p class="dc-label">Email 3</p><p class="dc-val">+0.5pp</p></div>
+      </div>
     </div>
   </div>
 
@@ -69,18 +72,11 @@ const commonOpts = {
   maintainAspectRatio: false,
   plugins: {
     legend: { display: false },
-    tooltip: {
-      callbacks: {
-        label: (ctx) => ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(2) + '%'
-      }
-    }
+    tooltip: { callbacks: { label: (ctx) => ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(2) + '%' } }
   },
   scales: {
-    x: { ticks: { font: { size: 13 } }, grid: { display: false } },
-    y: {
-      ticks: { callback: (v) => v + '%', font: { size: 12 } },
-      grid: { color: 'rgba(128,128,128,0.1)' }
-    }
+    x: { ticks: { font: { size: 12 } }, grid: { display: false } },
+    y: { ticks: { callback: (v) => v + '%', font: { size: 11 } }, grid: { color: 'rgba(128,128,128,0.1)' } }
   }
 };
 
@@ -93,10 +89,7 @@ new Chart(document.getElementById('openChart'), {
       { label: 'Old journey', data: [33.37, 28.66, 28.94], backgroundColor: '#B5D4F4', borderColor: '#378ADD', borderWidth: 1, borderRadius: 4 }
     ]
   },
-  options: {
-    ...commonOpts,
-    scales: { ...commonOpts.scales, y: { ...commonOpts.scales.y, min: 0, max: 50 } }
-  }
+  options: { ...commonOpts, scales: { ...commonOpts.scales, y: { ...commonOpts.scales.y, min: 0, max: 50 } } }
 });
 
 new Chart(document.getElementById('ctrChart'), {
@@ -108,10 +101,7 @@ new Chart(document.getElementById('ctrChart'), {
       { label: 'Old journey', data: [1.10, 0.98, 0.43], backgroundColor: '#B5D4F4', borderColor: '#378ADD', borderWidth: 1, borderRadius: 4 }
     ]
   },
-  options: {
-    ...commonOpts,
-    scales: { ...commonOpts.scales, y: { ...commonOpts.scales.y, min: 0, max: 4 } }
-  }
+  options: { ...commonOpts, scales: { ...commonOpts.scales, y: { ...commonOpts.scales.y, min: 0, max: 4 } } }
 });
 </script>
 </body>
