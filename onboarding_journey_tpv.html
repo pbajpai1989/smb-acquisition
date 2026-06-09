@@ -12,7 +12,7 @@
     .subtitle { font-size: 13px; color: #888; margin-bottom: 20px; }
     .caveat { background: #faeeda; border-radius: 8px; padding: 10px 14px; margin-bottom: 24px; font-size: 13px; color: #633806; display: flex; align-items: flex-start; gap: 8px; line-height: 1.6; }
     .caveat-icon { flex-shrink: 0; margin-top: 1px; }
-    .sec-label { font-size: 18px; font-weight: 700; letter-spacing: 0; color: #111; text-transform: none; margin-bottom: 10px; }
+    .sec-label { font-size: 18px; font-weight: 700; color: #111; margin-bottom: 10px; }
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
     .card { border: 1px solid #e5e5e3; border-radius: 10px; padding: 14px 16px; background: #fff; }
     .card.highlight { border-color: #5DCAA5; }
@@ -31,20 +31,9 @@
     .neg { color: #A32D2D; }
     .zero { color: #999; }
     .divider { border: none; border-top: 1px solid #efefed; margin: 10px 0; }
-    .chart-section { background: #fff; border: 1px solid #e5e5e3; border-radius: 10px; padding: 16px; margin-bottom: 24px; }
-    .chart-title { font-size: 13px; font-weight: 600; color: #111; margin-bottom: 4px; }
-    .chart-sub { font-size: 12px; color: #999; margin-bottom: 14px; }
-    .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; font-size: 12px; color: #888; }
-    .legend span { display: flex; align-items: center; gap: 5px; }
-    .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
-    .insight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
-    .ic { border-radius: 8px; padding: 12px 14px; font-size: 13px; line-height: 1.6; }
-    .ic.good { background: #e1f5ee; color: #085041; }
-    .ic.watch { background: #faeeda; color: #633806; }
-    .ic-title { font-size: 12px; font-weight: 600; margin-bottom: 3px; }
     .footer { font-size: 11px; color: #bbb; text-align: center; margin-top: 32px; }
     @media (max-width: 600px) {
-      .two-col, .insight-grid { grid-template-columns: 1fr; }
+      .two-col { grid-template-columns: 1fr; }
       .mg { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
@@ -66,44 +55,44 @@
       <span class="badge badge-km">Key Markets</span>
       <div class="card-header">
         <p class="col-head">Strong avg, gains concentrated at top</p>
-        <p class="col-sub">High avg ($7.9) with $0 median — top-tier creators driving the lift so far</p>
+        <p class="col-sub">High avg ($6.6) with $0 median — top-tier creators driving the lift so far</p>
       </div>
       <p class="row-lbl">F30D TPV / Creator</p>
       <div class="mg">
-        <div class="mc"><p class="mc-l">Avg</p><p class="mc-v pos">$7.9</p></div>
-        <div class="mc"><p class="mc-l">25th pct</p><p class="mc-v zero">$0.3</p></div>
+        <div class="mc"><p class="mc-l">Avg</p><p class="mc-v pos">$6.6</p></div>
+        <div class="mc"><p class="mc-l">25th pct</p><p class="mc-v neg">-$0.3</p></div>
         <div class="mc"><p class="mc-l">Median</p><p class="mc-v zero">$0.0</p></div>
-        <div class="mc"><p class="mc-l">75th pct</p><p class="mc-v pos">$25.5</p></div>
+        <div class="mc"><p class="mc-l">75th pct</p><p class="mc-v pos">$22.8</p></div>
       </div>
       <hr class="divider">
-      <p class="row-lbl">Quarterly Annualized TPV Impact</p>
+      <p class="row-lbl">Monthly Annualized TPV Impact</p>
       <div class="mg">
-        <div class="mc"><p class="mc-l">Avg</p><p class="mc-v pos">$584.2K</p></div>
-        <div class="mc"><p class="mc-l">25th pct</p><p class="mc-v zero">$18.6K</p></div>
+        <div class="mc"><p class="mc-l">Avg</p><p class="mc-v pos">$190.4K</p></div>
+        <div class="mc"><p class="mc-l">25th pct</p><p class="mc-v neg">-$8.4K</p></div>
         <div class="mc"><p class="mc-l">Median</p><p class="mc-v zero">$0.0</p></div>
-        <div class="mc"><p class="mc-l">75th pct</p><p class="mc-v pos">$1.90M</p></div>
+        <div class="mc"><p class="mc-l">75th pct</p><p class="mc-v pos">$657.2K</p></div>
       </div>
     </div>
     <div class="card highlight">
       <span class="badge badge-all">Overall</span>
       <div class="card-header">
         <p class="col-head">New journey broadly outperforms old</p>
-        <p class="col-sub">Positive median ($0.8) across all markets — consistent improvement over the old journey</p>
+        <p class="col-sub">Positive median ($0.1) across all markets — consistent improvement over the old journey</p>
       </div>
       <p class="row-lbl">F30D TPV / Creator</p>
       <div class="mg">
-        <div class="mc"><p class="mc-l">Avg</p><p class="mc-v pos">$6.9</p></div>
-        <div class="mc"><p class="mc-l">25th pct</p><p class="mc-v neg">-$0.5</p></div>
-        <div class="mc"><p class="mc-l">Median</p><p class="mc-v pos">$0.8</p></div>
-        <div class="mc"><p class="mc-l">75th pct</p><p class="mc-v pos">$17.8</p></div>
+        <div class="mc"><p class="mc-l">Avg</p><p class="mc-v pos">$3.6</p></div>
+        <div class="mc"><p class="mc-l">25th pct</p><p class="mc-v neg">-$0.4</p></div>
+        <div class="mc"><p class="mc-l">Median</p><p class="mc-v pos">$0.1</p></div>
+        <div class="mc"><p class="mc-l">75th pct</p><p class="mc-v pos">$13.3</p></div>
       </div>
       <hr class="divider">
-      <p class="row-lbl">Quarterly Annualized TPV Impact</p>
+      <p class="row-lbl">Monthly Annualized TPV Impact</p>
       <div class="mg">
-        <div class="mc"><p class="mc-l">Avg</p><p class="mc-v pos">$510.6K</p></div>
-        <div class="mc"><p class="mc-l">25th pct</p><p class="mc-v neg">-$39.4K</p></div>
-        <div class="mc"><p class="mc-l">Median</p><p class="mc-v pos">$61.6K</p></div>
-        <div class="mc"><p class="mc-l">75th pct</p><p class="mc-v pos">$1.32M</p></div>
+        <div class="mc"><p class="mc-l">Avg</p><p class="mc-v pos">$104.4K</p></div>
+        <div class="mc"><p class="mc-l">25th pct</p><p class="mc-v neg">-$12.4K</p></div>
+        <div class="mc"><p class="mc-l">Median</p><p class="mc-v pos">$1.4K</p></div>
+        <div class="mc"><p class="mc-l">75th pct</p><p class="mc-v pos">$382.6K</p></div>
       </div>
     </div>
   </div>
@@ -113,52 +102,50 @@
     <div class="card">
       <span class="badge badge-km">Key Markets</span>
       <div class="card-header">
-        <p class="col-head">Healthiest result — median exceeds avg</p>
-        <p class="col-sub">Median ($4.4) > avg ($2.2) means lift is broadly distributed, not outlier-driven</p>
+        <p class="col-head">Healthiest result — broad positive lift</p>
+        <p class="col-sub">Positive median ($5.0) and all percentiles positive — lift is real and broadly distributed</p>
       </div>
       <p class="row-lbl">F30D TPV / Creator</p>
       <div class="mg">
-        <div class="mc"><p class="mc-l">Avg</p><p class="mc-v pos">$2.2</p></div>
-        <div class="mc"><p class="mc-l">25th pct</p><p class="mc-v pos">$0.6</p></div>
-        <div class="mc"><p class="mc-l">Median</p><p class="mc-v pos">$4.4</p></div>
-        <div class="mc"><p class="mc-l">75th pct</p><p class="mc-v pos">$17.1</p></div>
+        <div class="mc"><p class="mc-l">Avg</p><p class="mc-v pos">$6.5</p></div>
+        <div class="mc"><p class="mc-l">25th pct</p><p class="mc-v pos">$1.7</p></div>
+        <div class="mc"><p class="mc-l">Median</p><p class="mc-v pos">$5.0</p></div>
+        <div class="mc"><p class="mc-l">75th pct</p><p class="mc-v pos">$7.5</p></div>
       </div>
       <hr class="divider">
-      <p class="row-lbl">Quarterly Annualized TPV Impact</p>
+      <p class="row-lbl">Monthly Annualized TPV Impact</p>
       <div class="mg">
-        <div class="mc"><p class="mc-l">Avg</p><p class="mc-v pos">$164.8K</p></div>
-        <div class="mc"><p class="mc-l">25th pct</p><p class="mc-v pos">$42.7K</p></div>
-        <div class="mc"><p class="mc-l">Median</p><p class="mc-v pos">$326.3K</p></div>
-        <div class="mc"><p class="mc-l">75th pct</p><p class="mc-v pos">$1.27M</p></div>
+        <div class="mc"><p class="mc-l">Avg</p><p class="mc-v pos">$186.6K</p></div>
+        <div class="mc"><p class="mc-l">25th pct</p><p class="mc-v pos">$49.4K</p></div>
+        <div class="mc"><p class="mc-l">Median</p><p class="mc-v pos">$144.4K</p></div>
+        <div class="mc"><p class="mc-l">75th pct</p><p class="mc-v pos">$216.7K</p></div>
       </div>
     </div>
     <div class="card">
       <span class="badge badge-all">Overall</span>
       <div class="card-header">
-        <p class="col-head">Mixed — avg positive, median slightly negative</p>
-        <p class="col-sub">Avg lift ($1.4) driven by top creators; typical creator outside KM not yet moving</p>
+        <p class="col-head">Solid across the board</p>
+        <p class="col-sub">Positive median ($1.1) with all percentiles positive — new journey lifting the typical creator</p>
       </div>
       <p class="row-lbl">F30D TPV / Creator</p>
       <div class="mg">
-        <div class="mc"><p class="mc-l">Avg</p><p class="mc-v pos">$1.4</p></div>
-        <div class="mc"><p class="mc-l">25th pct</p><p class="mc-v zero">$0.0</p></div>
-        <div class="mc"><p class="mc-l">Median</p><p class="mc-v neg">-$0.2</p></div>
-        <div class="mc"><p class="mc-l">75th pct</p><p class="mc-v pos">$14.1</p></div>
+        <div class="mc"><p class="mc-l">Avg</p><p class="mc-v pos">$3.8</p></div>
+        <div class="mc"><p class="mc-l">25th pct</p><p class="mc-v pos">$1.2</p></div>
+        <div class="mc"><p class="mc-l">Median</p><p class="mc-v pos">$1.1</p></div>
+        <div class="mc"><p class="mc-l">75th pct</p><p class="mc-v pos">$7.1</p></div>
       </div>
       <hr class="divider">
-      <p class="row-lbl">Quarterly Annualized TPV Impact</p>
+      <p class="row-lbl">Monthly Annualized TPV Impact</p>
       <div class="mg">
-        <div class="mc"><p class="mc-l">Avg</p><p class="mc-v pos">$103.4K</p></div>
-        <div class="mc"><p class="mc-l">25th pct</p><p class="mc-v neg">-$2.2K</p></div>
-        <div class="mc"><p class="mc-l">Median</p><p class="mc-v neg">-$11.9K</p></div>
-        <div class="mc"><p class="mc-l">75th pct</p><p class="mc-v pos">$1.04M</p></div>
+        <div class="mc"><p class="mc-l">Avg</p><p class="mc-v pos">$108.9K</p></div>
+        <div class="mc"><p class="mc-l">25th pct</p><p class="mc-v pos">$33.9K</p></div>
+        <div class="mc"><p class="mc-l">Median</p><p class="mc-v pos">$30.3K</p></div>
+        <div class="mc"><p class="mc-l">75th pct</p><p class="mc-v pos">$203.6K</p></div>
       </div>
     </div>
   </div>
 
   <p class="footer">New Onboarding Email Journey · TPV Impact Analysis · June 2026</p>
 </div>
-
-
 </body>
 </html>
