@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SMB Funnel — Q2'26 vs Q1'26</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: #f7f7f5;
+      color: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 3rem 1rem;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #e8e6e0;
+      border-radius: 14px;
+      padding: 2rem 2.5rem;
+      width: 100%;
+      max-width: 620px;
+    }
+
+    .card-header {
+      margin-bottom: 2rem;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #888780;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+
+    .legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #888780;
+    }
+
+    .legend-swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .metric-section {
+      margin-bottom: 1.4rem;
+    }
+
+    .metric-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #1a1a1a;
+      margin-bottom: 7px;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 5px;
+    }
+
+    .quarter-tag {
+      font-size: 11px;
+      color: #888780;
+      width: 36px;
+      flex-shrink: 0;
+    }
+
+    .bar-outer {
+      flex: 1;
+      position: relative;
+    }
+
+    .bar-fill {
+      height: 28px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+      min-width: 64px;
+    }
+
+    .bar-fill.q1   { background: #AFA9EC; }
+    .bar-fill.q2p  { background: #1D9E75; }
+    .bar-fill.q2n  { background: #D85A30; }
+
+    .bar-val {
+      font-size: 12px;
+      font-weight: 500;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .delta-badge {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 5px;
+      white-space: nowrap;
+      min-width: 46px;
+      text-align: center;
+    }
+
+    .delta-badge.pos { background: #E1F5EE; color: #0F6E56; }
+    .delta-badge.neg { background: #FAECE7; color: #993C1D; }
+    .delta-badge.hidden { visibility: hidden; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #eeece6;
+      margin: 1.75rem 0;
+    }
+
+    .tpv-card {
+      background: #f4fcf8;
+      border: 1px solid #c5e8d8;
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .tpv-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: #0F6E56;
+      margin-bottom: 6px;
+    }
+
+    .tpv-body {
+      font-size: 13.5px;
+      color: #2c2c2a;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .tpv-amount {
+      font-size: 15px;
+      font-weight: 500;
+      color: #1D9E75;
+      margin-bottom: 6px;
+    }
+
+    .tpv-track {
+      background: #d0ede2;
+      border-radius: 20px;
+      height: 8px;
+      width: 100%;
+      overflow: hidden;
+      margin-bottom: 7px;
+    }
+
+    .tpv-fill {
+      height: 100%;
+      border-radius: 20px;
+      background: #1D9E75;
+    }
+
+    .tpv-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #888780;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-header">
+      <p class="eyebrow">Inbound funnel</p>
+      <h1 class="card-title">Q2'26 vs Q1'26</h1>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-swatch" style="background:#AFA9EC;"></span>Q1'26</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#1D9E75;"></span>Q2'26 (up)</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#D85A30;"></span>Q2'26 (down)</span>
+      </div>
+    </div>
+
+    <div id="bars"></div>
+
+    <hr class="divider" />
+
+    <div class="tpv-card">
+      <p class="tpv-eyebrow">📈 TPV Pacing — Q2'26</p>
+      <p class="tpv-body">
+        Annualized TPV at <strong>$176K</strong> vs Q1 $230K — tracking below Q1 pace toward the guardrail goal of <strong>$200K</strong>. At 88% of goal.
+      </p>
+      <p class="tpv-amount">$176K</p>
+      <div class="tpv-track"><div class="tpv-fill" style="width: 88%;"></div></div>
+      <div class="tpv-labels"><span>88% of goal</span><span>$200K guardrail</span></div>
+    </div>
+  </div>
+
+  <script>
+    const metrics = [
+      { label: "Unmasked",        q1: 45248, q2: 50330, fmt: v => v.toLocaleString() },
+      { label: "PQL",             q1: 1771,  q2: 2543,  fmt: v => v.toLocaleString() },
+      { label: "SQL",             q1: 795,   q2: 846,   fmt: v => v.toLocaleString() },
+      { label: "Meetings booked", q1: 114,   q2: 78,    fmt: v => v.toString() },
+      { label: "Activations",     q1: 72,    q2: 33,    fmt: v => v.toString() },
+    ];
+
+    const funnelMaxPcts = [100, 78, 60, 42, 28];
+    const container = document.getElementById('bars');
+
+    metrics.forEach((m, i) => {
+      const delta = Math.round((m.q2 - m.q1) / m.q1 * 100);
+      const isPos = delta >= 0;
+      const localMax = Math.max(m.q1, m.q2);
+      const stageMax = funnelMaxPcts[i];
+      const q1Pct = (m.q1 / localMax * stageMax).toFixed(1);
+      const q2Pct = (m.q2 / localMax * stageMax).toFixed(1);
+      const q2Class = isPos ? 'q2p' : 'q2n';
+      const deltaClass = isPos ? 'pos' : 'neg';
+      const deltaStr = (isPos ? '+' : '') + delta + '%';
+
+      container.innerHTML += `
+        <div class="metric-section">
+          <div class="metric-label">${m.label}</div>
+          <div class="bar-row">
+            <span class="quarter-tag">Q1'26</span>
+            <div class="bar-outer">
+              <div class="bar-fill q1" style="width:${q1Pct}%">
+                <span class="bar-val">${m.fmt(m.q1)}</span>
+              </div>
+            </div>
+            <span class="delta-badge hidden">—</span>
+          </div>
+          <div class="bar-row">
+            <span class="quarter-tag">Q2'26</span>
+            <div class="bar-outer">
+              <div class="bar-fill ${q2Class}" style="width:${q2Pct}%">
+                <span class="bar-val">${m.fmt(m.q2)}</span>
+              </div>
+            </div>
+            <span class="delta-badge ${deltaClass}">${deltaStr}</span>
+          </div>
+        </div>`;
+    });
+  </script>
+</body>
+</html>
