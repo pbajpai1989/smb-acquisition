@@ -1,0 +1,566 @@
+<title>Creator Segment Flow — SQL / PQL Cohorts</title>
+<style>
+  :root{
+    --surface-1:      #fcfcfb;
+    --page-plane:     #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --gridline:       #e1e0d9;
+    --border:         rgba(11,11,11,0.10);
+    --root-a:         #0b0b0b;   /* trunk / larger root */
+    --root-b:         #898781;   /* trunk / smaller-or-secondary root */
+    --neutral-fill:   #d8d6cd;   /* segments 1-3, Low TPV — no signal yet */
+    --neutral-line:   #a9a79d;
+    --warn-fill:      #fab219;   /* segments 4-6 — flagged opportunity */
+    --warn-line:      #c98e12;
+    --good-fill:      #0ca30c;  /* segment 7, High TPV — proven / healthy */
+    --good-line:      #087d08;
+    --link-op: 0.34;
+    --link-op-hover: 0.62;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --surface-1:      #1a1a19;
+      --page-plane:     #0d0d0d;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --gridline:       #2c2c2a;
+      --border:         rgba(255,255,255,0.10);
+      --root-a:         #ffffff;
+      --root-b:         #6f6e68;
+      --neutral-fill:   #726f66;
+      --neutral-line:   #939085;
+      --warn-fill:      #fab219;
+      --warn-line:      #d99a0f;
+      --good-fill:      #0ca30c;
+      --good-line:      #12c412;
+      --link-op: 0.40;
+      --link-op-hover: 0.68;
+    }
+  }
+  :root[data-theme="dark"]{
+    --surface-1:      #1a1a19;
+    --page-plane:     #0d0d0d;
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+    --gridline:       #2c2c2a;
+    --border:         rgba(255,255,255,0.10);
+    --root-a:         #ffffff;
+    --root-b:         #6f6e68;
+    --neutral-fill:   #726f66;
+    --neutral-line:   #939085;
+    --good-line:      #12c412;
+    --link-op: 0.40;
+    --link-op-hover: 0.68;
+  }
+  :root[data-theme="light"]{
+    --surface-1:      #fcfcfb;
+    --page-plane:     #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --gridline:       #e1e0d9;
+    --border:         rgba(11,11,11,0.10);
+    --root-a:         #0b0b0b;
+    --root-b:         #898781;
+    --neutral-fill:   #d8d6cd;
+    --neutral-line:   #a9a79d;
+    --good-line:      #087d08;
+    --link-op: 0.34;
+    --link-op-hover: 0.62;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:var(--page-plane);
+    color:var(--text-primary);
+    font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+    font-size:14px;
+    line-height:1.5;
+  }
+  .wrap{ max-width:1180px; margin:0 auto; padding:32px 24px 72px; }
+
+  header.page{ margin-bottom:22px; }
+  header.page h1{
+    font-size:24px; font-weight:700; margin:0 0 6px; letter-spacing:-0.01em; text-wrap:balance;
+  }
+  header.page p{ color:var(--text-secondary); margin:0; max-width:78ch; font-size:13.5px; }
+
+  .legend{
+    display:flex; gap:20px; flex-wrap:wrap; align-items:center;
+    background:var(--surface-1); border:1px solid var(--border); border-radius:8px;
+    padding:12px 16px; margin:18px 0 30px; font-size:12.5px; color:var(--text-secondary);
+  }
+  .legend .lg-title{ font-weight:600; color:var(--text-primary); margin-right:4px; }
+  .legend .key{ display:flex; align-items:center; gap:7px; }
+  .legend .swatch{ width:11px; height:11px; border-radius:2px; flex-shrink:0; }
+
+  .chart-card{
+    background:var(--surface-1); border:1px solid var(--border); border-radius:10px;
+    padding:20px 22px 16px; margin-bottom:34px;
+  }
+  .chart-card h2{ font-size:16px; font-weight:700; margin:0 0 2px; }
+  .chart-card .stat-line{ color:var(--text-secondary); font-size:12.5px; margin:0 0 14px; }
+  .chart-card .stat-line b{ color:var(--text-primary); font-family:inherit; }
+
+  .sankey-scroll{ overflow-x:auto; }
+  svg.sankey{ display:block; }
+  svg.sankey text{ font-family:system-ui,-apple-system,"Segoe UI",sans-serif; fill:var(--text-primary); }
+  svg.sankey .node-value{ fill:var(--text-secondary); font-size:11px; }
+  svg.sankey .node-label{ font-size:12px; font-weight:600; }
+  svg.sankey .node-pct{ fill:var(--text-muted); font-size:10.5px; }
+
+  .node-rect{ stroke:var(--border); stroke-width:1; cursor:pointer; }
+  .node-rect:hover, .node-rect:focus-visible{ filter:brightness(1.08); }
+  .node-rect:focus-visible{ outline:2px solid var(--good-line); outline-offset:2px; }
+
+  .link-path{ cursor:pointer; stroke:none; }
+  .link-path:focus-visible{ outline:2px solid var(--good-line); outline-offset:1px; }
+
+  .toggle-row{ margin-top:10px; }
+  .toggle-btn{
+    font-family:inherit; font-size:12px; font-weight:600; color:var(--text-secondary);
+    background:none; border:1px solid var(--border); border-radius:6px; padding:5px 10px; cursor:pointer;
+  }
+  .toggle-btn:hover{ color:var(--text-primary); border-color:var(--text-muted); }
+  .toggle-btn:focus-visible{ outline:2px solid var(--good-line); outline-offset:2px; }
+
+  table.data-table{ width:100%; border-collapse:collapse; margin-top:14px; font-size:12.5px; }
+  table.data-table th{
+    text-align:left; text-transform:uppercase; letter-spacing:.04em; font-size:10.5px;
+    color:var(--text-muted); font-weight:600; padding:6px 10px; border-bottom:1px solid var(--gridline);
+  }
+  table.data-table td{ padding:6px 10px; border-bottom:1px solid var(--gridline); }
+  table.data-table td.num, table.data-table th.num{ text-align:right; font-variant-numeric:tabular-nums; }
+
+  #tooltip{
+    position:fixed; pointer-events:none; z-index:50; display:none;
+    background:var(--text-primary); color:var(--surface-1);
+    font-size:12px; line-height:1.45; padding:8px 10px; border-radius:6px;
+    max-width:260px; box-shadow:0 4px 14px rgba(0,0,0,0.25);
+  }
+  #tooltip .tt-value{ font-weight:700; font-size:13.5px; }
+  #tooltip .tt-sub{ opacity:0.75; margin-top:2px; }
+
+  footer.page{ margin-top:10px; font-size:11.5px; color:var(--text-muted); }
+</style>
+
+<div class="wrap">
+  <header class="page">
+    <h1>Creator Segment Flow — 60‑Day Cohort</h1>
+    <p>Volume of creators across <b>SQL/PQL status → behavioral segment → TPV tier</b>, split into three views so the tiny high-priority SQL cohorts aren't flattened by the much larger PQL/Not‑PQL base. Bar and ribbon thickness use a square-root scale for legibility — exact counts are always shown as labels and in the table view.</p>
+  </header>
+
+  <div class="legend" id="sharedLegend">
+    <span class="lg-title">Segment / TPV color key:</span>
+    <span class="key"><span class="swatch" style="background:var(--neutral-fill)"></span>No signal yet — segments 1–3, Low TPV</span>
+    <span class="key"><span class="swatch" style="background:var(--warn-fill)"></span>Flagged opportunity — segments 4–6</span>
+    <span class="key"><span class="swatch" style="background:var(--good-fill)"></span>Healthy / proven — segment 7, High TPV (≥$100)</span>
+  </div>
+
+  <div id="charts"></div>
+
+  <footer class="page">
+    Source: <code>prod.scratch.pbajpai_inbound_creator_segmentation</code>, 60‑day cohort. Ribbon/bar width ∝ √(creator count); labels and the table view always show exact counts.
+  </footer>
+</div>
+
+<div id="tooltip" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+
+  const SEGMENT_META = {
+    "1. Not Published":                          { short: "1. Not Published",              tone: "neutral" },
+    "2. Published, No Membership":                { short: "2. Published, No Membership",    tone: "neutral" },
+    "3. Free Members, Not Financially Active":    { short: "3. Free, Not Paying",            tone: "neutral" },
+    "4. Low Membership/Traffic Ratio":             { short: "4. Low Membership/Traffic",      tone: "warn" },
+    "5. Low Paid/Free Ratio":                      { short: "5. Low Paid/Free Ratio",         tone: "warn" },
+    "6. High Paid/Free Ratio":                     { short: "6. High Paid/Free Ratio",        tone: "warn" },
+    "7. Steady State (No Flag)":                   { short: "7. Steady State",                tone: "good" },
+  };
+  const SEGMENT_ORDER = Object.keys(SEGMENT_META);
+
+  function toneVar(tone){
+    if (tone === "good") return { fill: "var(--good-fill)", line: "var(--good-line)" };
+    if (tone === "warn") return { fill: "var(--warn-fill)", line: "var(--warn-line)" };
+    return { fill: "var(--neutral-fill)", line: "var(--neutral-line)" };
+  }
+
+  // ---- raw counts, from: SELECT sql_status, segment, is_high_tpv, count(*) ----
+  const RAW = {
+    "SQL w Meeting": {
+      "1. Not Published": { false: 25 },
+      "2. Published, No Membership": { false: 5 },
+      "3. Free Members, Not Financially Active": { false: 6 },
+      "4. Low Membership/Traffic Ratio": { false: 1, true: 5 },
+      "5. Low Paid/Free Ratio": { false: 4, true: 6 },
+      "7. Steady State (No Flag)": { false: 2, true: 2 },
+    },
+    "SQL w/o Meeting": {
+      "1. Not Published": { false: 117 },
+      "2. Published, No Membership": { false: 67 },
+      "3. Free Members, Not Financially Active": { false: 57, true: 2 },
+      "4. Low Membership/Traffic Ratio": { false: 19, true: 29 },
+      "5. Low Paid/Free Ratio": { false: 24, true: 18 },
+      "6. High Paid/Free Ratio": { false: 6, true: 12 },
+      "7. Steady State (No Flag)": { false: 10, true: 20 },
+    },
+    "Not PQL": {
+      "1. Not Published": { false: 307355 },
+      "2. Published, No Membership": { false: 60301, true: 13 },
+      "3. Free Members, Not Financially Active": { false: 8276, true: 112 },
+      "4. Low Membership/Traffic Ratio": { false: 2005, true: 637 },
+      "5. Low Paid/Free Ratio": { false: 747, true: 268 },
+      "6. High Paid/Free Ratio": { false: 730, true: 309 },
+      "7. Steady State (No Flag)": { false: 867, true: 340 },
+    },
+    "PQL": {
+      "1. Not Published": { false: 505 },
+      "2. Published, No Membership": { false: 270 },
+      "3. Free Members, Not Financially Active": { false: 89, true: 2 },
+      "4. Low Membership/Traffic Ratio": { false: 31, true: 16 },
+      "5. Low Paid/Free Ratio": { false: 21, true: 9 },
+      "6. High Paid/Free Ratio": { false: 9, true: 3 },
+      "7. Steady State (No Flag)": { false: 16, true: 14 },
+    },
+  };
+
+  function buildChartData(rootLabels){
+    const nodes = [];
+    const links = [];
+    const seen = new Set();
+    function addNode(id, label, layer, extra){
+      if (seen.has(id)) return;
+      seen.add(id);
+      nodes.push(Object.assign({ id, label, layer, value: 0 }, extra || {}));
+    }
+    // layer 0: roots
+    rootLabels.forEach((label, i) => addNode("root:" + label, label, 0, { kind: "root", rootIndex: i }));
+    // layer 1: segments (fixed order, only those present)
+    const presentSegments = SEGMENT_ORDER.filter(seg => rootLabels.some(r => RAW[r] && RAW[r][seg]));
+    presentSegments.forEach(seg => addNode("seg:" + seg, SEGMENT_META[seg].short, 1, { kind: "segment", tone: SEGMENT_META[seg].tone }));
+    // layer 2: tpv
+    addNode("tpv:Low", "Low TPV (< $100)", 2, { kind: "tpv", tone: "neutral" });
+    addNode("tpv:High", "High TPV (≥ $100)", 2, { kind: "tpv", tone: "good" });
+
+    const byId = {};
+    nodes.forEach(n => byId[n.id] = n);
+
+    rootLabels.forEach(rootLabel => {
+      const rootId = "root:" + rootLabel;
+      presentSegments.forEach(seg => {
+        const cell = RAW[rootLabel][seg];
+        if (!cell) return;
+        const segTotal = (cell.false || 0) + (cell.true || 0);
+        if (segTotal <= 0) return;
+        links.push({ source: rootId, target: "seg:" + seg, value: segTotal });
+        byId[rootId].value += segTotal;
+        byId["seg:" + seg].value += segTotal;
+        if (cell.false) links.push({ source: "seg:" + seg, target: "tpv:Low", value: cell.false, _segTpv: true });
+        if (cell.true) links.push({ source: "seg:" + seg, target: "tpv:High", value: cell.true, _segTpv: true });
+      });
+    });
+    // tpv node totals = sum of incoming (avoid double counting across roots: recompute from links)
+    byId["tpv:Low"].value = 0; byId["tpv:High"].value = 0;
+    links.forEach(l => { if (l.target === "tpv:Low") byId["tpv:Low"].value += l.value; if (l.target === "tpv:High") byId["tpv:High"].value += l.value; });
+
+    const total = rootLabels.reduce((s, r) => s + byId["root:" + r].value, 0);
+    return { nodes, links, byId, total };
+  }
+
+  const CHARTS = [
+    { title: "1 · SQL with Meeting", note: "SQLs who've had a sales meeting — the smallest, highest-touch cohort.", roots: ["SQL w Meeting"] },
+    { title: "2 · SQL without Meeting", note: "SQLs not yet on a call — the meeting-scheduling queue.", roots: ["SQL w/o Meeting"] },
+    { title: "3 · PQL vs. Not PQL", note: "The full inbound base, split by whether behavior/traffic already qualified them as a PQL.", roots: ["Not PQL", "PQL"] },
+  ];
+
+  const NODE_W = 16;
+  const GAP = 10;
+  const LABEL_GUTTER = 210;
+
+  const MIN_NODE_H = 24; // floor so every node has room for a two-line label beside it
+
+  function layoutColumn(colNodes, height){
+    const n = colNodes.length;
+    const thick = colNodes.map(n2 => Math.sqrt(Math.max(n2.value, 0.0001)));
+    const totalThick = thick.reduce((a,b)=>a+b,0);
+    const totalGap = GAP * Math.max(n - 1, 0);
+    // every node gets MIN_NODE_H as a floor; remaining height is distributed by sqrt(value)
+    // so the visual proportions still track magnitude once the label-legibility floor is met.
+    const remaining = Math.max(height - totalGap - n * MIN_NODE_H, 0);
+    const k = totalThick > 0 ? remaining / totalThick : 0;
+    let y = 0;
+    colNodes.forEach((n2, i) => {
+      const h = MIN_NODE_H + k * thick[i];
+      n2.y0 = y; n2.y1 = y + h;
+      y += h + GAP;
+    });
+  }
+
+  function ribbonPath(x0, y0a, y0b, x1, y1a, y1b){
+    const cx = (x0 + x1) / 2;
+    return `M${x0},${y0a} C${cx},${y0a} ${cx},${y1a} ${x1},${y1a} L${x1},${y1b} C${cx},${y1b} ${cx},${y0b} ${x0},${y0b} Z`;
+  }
+
+  const tooltip = document.getElementById("tooltip");
+  function showTooltip(html, evt){
+    tooltip.innerHTML = "";
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = html;
+    while (wrapper.firstChild) tooltip.appendChild(wrapper.firstChild);
+    tooltip.style.display = "block";
+    positionTooltip(evt);
+  }
+  function positionTooltip(evt){
+    if (!evt) return;
+    const pad = 14;
+    let x = evt.clientX + pad, y = evt.clientY + pad;
+    const rect = tooltip.getBoundingClientRect();
+    if (x + rect.width > window.innerWidth - 8) x = evt.clientX - rect.width - pad;
+    if (y + rect.height > window.innerHeight - 8) y = evt.clientY - rect.height - pad;
+    tooltip.style.left = x + "px"; tooltip.style.top = y + "px";
+  }
+  function hideTooltip(){ tooltip.style.display = "none"; }
+
+  function fmt(n){ return n.toLocaleString("en-US"); }
+  function pct(n, d){ return d > 0 ? (100*n/d).toFixed(1) + "%" : "—"; }
+
+  function renderChart(container, chartDef){
+    const data = buildChartData(chartDef.roots);
+    const layers = [[], [], []];
+    data.nodes.forEach(n => layers[n.layer].push(n));
+
+    const height = Math.max(280, 46 * layers[1].length + 40);
+    const width = 900;
+    const colX = [24, (width - LABEL_GUTTER) / 2, width - LABEL_GUTTER - NODE_W - 24 + LABEL_GUTTER - LABEL_GUTTER];
+    // explicit column x positions
+    const xRoot = 24, xSeg = 400, xTpv = width - 24 - NODE_W;
+
+    layoutColumn(layers[0], height);
+    layoutColumn(layers[1], height);
+    layoutColumn(layers[2], height);
+
+    // slice each node's span among its outgoing / incoming links, in a stable order
+    function sliceLinks(node, links, isSource){
+      const relevant = links.filter(l => (isSource ? l.source : l.target) === node.id);
+      const orderKey = isSource
+        ? l => data.byId[l.target].layer * 10000 + SEGMENT_ORDER.indexOf(l.target.replace("seg:", "")) + (l.target.startsWith("tpv:High") ? 0.5 : 0)
+        : l => data.byId[l.source].rootIndex !== undefined ? data.byId[l.source].rootIndex : SEGMENT_ORDER.indexOf(l.source.replace("seg:", ""));
+      relevant.sort((a,b) => orderKey(a) - orderKey(b));
+      let cursor = node.y0;
+      const span = node.y1 - node.y0;
+      const total = node.value;
+      relevant.forEach(l => {
+        const h = total > 0 ? (l.value/total) * span : 0;
+        if (isSource){ l.sy0 = cursor; l.sy1 = cursor + h; } else { l.ty0 = cursor; l.ty1 = cursor + h; }
+        cursor += h;
+      });
+    }
+    layers[0].forEach(n => sliceLinks(n, data.links, true));
+    layers[1].forEach(n => { sliceLinks(n, data.links, true); sliceLinks(n, data.links, false); });
+    layers[2].forEach(n => sliceLinks(n, data.links, false));
+
+    // assign x per node by layer
+    data.nodes.forEach(n => { n.x = n.layer === 0 ? xRoot : (n.layer === 1 ? xSeg : xTpv); });
+
+    const svgNS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("class", "sankey");
+    svg.setAttribute("width", width);
+    svg.setAttribute("height", height + 20);
+    svg.setAttribute("viewBox", `0 0 ${width} ${height + 20}`);
+    svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", chartDef.title + " flow diagram");
+
+    const g = document.createElementNS(svgNS, "g");
+    g.setAttribute("transform", "translate(0,10)");
+    svg.appendChild(g);
+
+    // links first (under nodes)
+    data.links.forEach(l => {
+      const src = data.byId[l.source], tgt = data.byId[l.target];
+      const tone = tgt.kind === "tpv" ? tgt.tone : (src.kind === "segment" ? src.tone : (tgt.tone || "neutral"));
+      const colors = toneVar(tone);
+      const path = document.createElementNS(svgNS, "path");
+      path.setAttribute("d", ribbonPath(src.x + NODE_W, l.sy0, l.sy1, tgt.x, l.ty0, l.ty1));
+      path.setAttribute("fill", colors.fill);
+      path.setAttribute("opacity", "var(--link-op)");
+      path.setAttribute("class", "link-path");
+      path.setAttribute("tabindex", "0");
+      path.setAttribute("role", "img");
+      const pctOfTotal = pct(l.value, data.total);
+      const ariaLabel = `${src.label} to ${tgt.label}: ${fmt(l.value)} creators, ${pctOfTotal} of this chart`;
+      path.setAttribute("aria-label", ariaLabel);
+      const showTT = (evt) => {
+        path.setAttribute("opacity", "var(--link-op-hover)");
+        showTooltip(
+          `<div class="tt-value">${fmt(l.value)} creators</div>` +
+          `<div>${escapeHtml(src.label)} → ${escapeHtml(tgt.label)}</div>` +
+          `<div class="tt-sub">${pctOfTotal} of this chart's total</div>`,
+          evt
+        );
+      };
+      const hideTT = () => { path.setAttribute("opacity", "var(--link-op)"); hideTooltip(); };
+      path.addEventListener("pointerenter", showTT);
+      path.addEventListener("pointermove", showTT);
+      path.addEventListener("pointerleave", hideTT);
+      path.addEventListener("focus", (e) => showTT(null));
+      path.addEventListener("blur", hideTT);
+      g.appendChild(path);
+    });
+
+    // nodes
+    data.nodes.forEach(n => {
+      let colors;
+      if (n.kind === "root") colors = { fill: n.rootIndex === 1 ? "var(--root-b)" : "var(--root-a)", line: "none" };
+      else colors = toneVar(n.tone);
+
+      const rect = document.createElementNS(svgNS, "rect");
+      rect.setAttribute("x", n.x);
+      rect.setAttribute("y", n.y0);
+      rect.setAttribute("width", NODE_W);
+      rect.setAttribute("height", Math.max(n.y1 - n.y0, 1));
+      rect.setAttribute("fill", colors.fill);
+      rect.setAttribute("rx", 3);
+      rect.setAttribute("class", "node-rect");
+      rect.setAttribute("tabindex", "0");
+      const pctOfTotal = pct(n.value, data.total);
+      rect.setAttribute("role", "img");
+      rect.setAttribute("aria-label", `${n.label}: ${fmt(n.value)} creators, ${pctOfTotal} of this chart`);
+      const showTT = (evt) => showTooltip(
+        `<div class="tt-value">${fmt(n.value)} creators</div>` +
+        `<div>${escapeHtml(n.label)}</div>` +
+        `<div class="tt-sub">${pctOfTotal} of this chart's total</div>`,
+        evt
+      );
+      rect.addEventListener("pointerenter", showTT);
+      rect.addEventListener("pointermove", showTT);
+      rect.addEventListener("pointerleave", hideTooltip);
+      rect.addEventListener("focus", () => showTT(null));
+      rect.addEventListener("blur", hideTooltip);
+      g.appendChild(rect);
+
+      const midY = (n.y0 + n.y1) / 2;
+      const label = document.createElementNS(svgNS, "text");
+      label.setAttribute("class", "node-label");
+      const onLeft = n.layer === 2;
+      const tx = onLeft ? n.x - 10 : n.x + NODE_W + 10;
+      label.setAttribute("x", tx);
+      label.setAttribute("y", midY - 3);
+      label.setAttribute("text-anchor", onLeft ? "end" : "start");
+      label.textContent = n.label;
+      g.appendChild(label);
+
+      const val = document.createElementNS(svgNS, "text");
+      val.setAttribute("class", "node-value");
+      val.setAttribute("x", tx);
+      val.setAttribute("y", midY + 12);
+      val.setAttribute("text-anchor", onLeft ? "end" : "start");
+      val.textContent = fmt(n.value) + " (" + pctOfTotalStr(n.value, data.total) + ")";
+      g.appendChild(val);
+    });
+
+    function pctOfTotalStr(n, d){ return pct(n, d); }
+
+    return { svg, data };
+  }
+
+  function escapeHtml(s){
+    const d = document.createElement("div");
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function renderTable(data, chartDef){
+    const table = document.createElement("table");
+    table.className = "data-table";
+    const thead = document.createElement("thead");
+    thead.innerHTML = "";
+    const headRow = document.createElement("tr");
+    ["Root", "Segment", "TPV tier", "Creators", "% of chart"].forEach(t => {
+      const th = document.createElement("th");
+      if (t === "Creators" || t === "% of chart") th.className = "num";
+      th.textContent = t;
+      headRow.appendChild(th);
+    });
+    thead.appendChild(headRow);
+    table.appendChild(thead);
+    const tbody = document.createElement("tbody");
+    const rows = [];
+    chartDef.roots.forEach(root => {
+      SEGMENT_ORDER.forEach(seg => {
+        const cell = RAW[root][seg];
+        if (!cell) return;
+        ["false", "true"].forEach(k => {
+          if (!cell[k]) return;
+          rows.push({ root, seg: SEGMENT_META[seg].short, tpv: k === "true" ? "High TPV" : "Low TPV", n: cell[k] });
+        });
+      });
+    });
+    const total = rows.reduce((s,r) => s + r.n, 0);
+    rows.forEach(r => {
+      const tr = document.createElement("tr");
+      [r.root, r.seg, r.tpv, fmt(r.n), pct(r.n, total)].forEach((val, i) => {
+        const td = document.createElement("td");
+        if (i >= 3) td.className = "num";
+        td.textContent = val;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    return table;
+  }
+
+  const container = document.getElementById("charts");
+  CHARTS.forEach((chartDef, idx) => {
+    const card = document.createElement("div");
+    card.className = "chart-card";
+
+    const h2 = document.createElement("h2");
+    h2.textContent = chartDef.title;
+    card.appendChild(h2);
+
+    const { svg, data } = renderChart(card, chartDef);
+
+    const statLine = document.createElement("p");
+    statLine.className = "stat-line";
+    const totalStrong = document.createElement("b");
+    totalStrong.textContent = fmt(data.total);
+    statLine.appendChild(document.createTextNode(chartDef.note + " Total: "));
+    statLine.appendChild(totalStrong);
+    statLine.appendChild(document.createTextNode(" creators."));
+    card.appendChild(statLine);
+
+    const scrollWrap = document.createElement("div");
+    scrollWrap.className = "sankey-scroll";
+    scrollWrap.appendChild(svg);
+    card.appendChild(scrollWrap);
+
+    const toggleRow = document.createElement("div");
+    toggleRow.className = "toggle-row";
+    const btn = document.createElement("button");
+    btn.className = "toggle-btn";
+    btn.textContent = "View as table";
+    btn.setAttribute("aria-expanded", "false");
+    const tableEl = renderTable(data, chartDef);
+    tableEl.style.display = "none";
+    btn.addEventListener("click", () => {
+      const showing = tableEl.style.display !== "none";
+      tableEl.style.display = showing ? "none" : "table";
+      btn.textContent = showing ? "View as table" : "Hide table";
+      btn.setAttribute("aria-expanded", String(!showing));
+    });
+    toggleRow.appendChild(btn);
+    card.appendChild(toggleRow);
+    card.appendChild(tableEl);
+
+    container.appendChild(card);
+  });
+
+})();
+</script>
